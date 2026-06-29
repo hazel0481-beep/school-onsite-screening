@@ -14,6 +14,7 @@ const viewState = {
   server: null,
   filterGrade: "all",
   connectionState: "connecting",
+  pollTimerId: null,
   setupOpen: false,
   setupRows: [],
   setupFloorsByBuilding: createEmptyFloorsByBuilding(),
@@ -57,7 +58,7 @@ initialize();
 async function initialize() {
   bindEvents();
   await loadState();
-  connectLiveUpdates();
+  startStatePolling();
 }
 
 function bindEvents() {
@@ -241,9 +242,7 @@ function bindEvents() {
 async function loadState() {
   try {
     setConnectionState("connecting", "불러오는 중");
-    const response = await fetch("/api/state");
-    const payload = await response.json();
-    viewState.server = payload;
+    await refreshState();
     render();
   } catch (error) {
     console.error(error);
@@ -251,28 +250,37 @@ async function loadState() {
   }
 }
 
-function connectLiveUpdates() {
-  const stream = new EventSource("/api/events");
+function startStatePolling() {
+  if (viewState.pollTimerId) {
+    clearInterval(viewState.pollTimerId);
+  }
 
-  stream.onopen = () => {
-    setConnectionState("connected", "실시간 연결됨");
-  };
+  setConnectionState("connected", "자동 새로고침 중");
 
-  stream.onmessage = (event) => {
+  viewState.pollTimerId = window.setInterval(async () => {
     try {
-      const payload = JSON.parse(event.data);
-      if (payload.state) {
-        viewState.server = payload.state;
-        render();
-      }
+      await refreshState();
+      render();
+      setConnectionState("connected", "자동 새로고침 중");
     } catch (error) {
-      console.error("Failed to parse event stream payload.", error);
+      console.error("Failed to refresh state.", error);
+      setConnectionState("error", "재연결 중");
     }
-  };
+  }, 4000);
+}
 
-  stream.onerror = () => {
-    setConnectionState("error", "재연결 중");
-  };
+async function refreshState() {
+  const response = await fetch("/api/state", {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`State request failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  viewState.server = payload;
+  return payload;
 }
 
 function render() {
