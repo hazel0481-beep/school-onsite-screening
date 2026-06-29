@@ -13,7 +13,6 @@ const STATUS_SHORT_LABELS = {
 const viewState = {
   server: null,
   filterGrade: "all",
-  hideCompleted: false,
   connectionState: "connecting",
   setupOpen: false,
   setupRows: [],
@@ -35,7 +34,6 @@ const elements = {
   pendingCountValue: document.querySelector("#pendingCountValue"),
   pendingCountNote: document.querySelector("#pendingCountNote"),
   gradeFilters: document.querySelector("#gradeFilters"),
-  hideCompletedInput: document.querySelector("#hideCompletedInput"),
   setupToggleButton: document.querySelector("#setupToggleButton"),
   closeSetupButton: document.querySelector("#closeSetupButton"),
   progressFill: document.querySelector("#progressFill"),
@@ -73,11 +71,6 @@ function bindEvents() {
       boardTitle: viewState.server.meta.boardTitle,
       eventDate: event.target.value,
     });
-  });
-
-  elements.hideCompletedInput.addEventListener("change", (event) => {
-    viewState.hideCompleted = event.target.checked;
-    render();
   });
 
   elements.gradeFilters.addEventListener("click", (event) => {
@@ -426,17 +419,28 @@ function renderStatusButton(classItem, status) {
 }
 
 function renderCurrentLocation() {
-  const inProgress = viewState.server.classes.find((item) => item.status === "in_progress");
+  const inProgressList = sortClasses(viewState.server.classes.filter((item) => item.status === "in_progress"));
   const latest = viewState.server.history[0];
 
-  if (inProgress) {
+  if (inProgressList.length) {
     elements.currentLocationCard.innerHTML = `
       <p class="current-location__label">지금 검진 중</p>
-      <p class="current-location__value">${formatClassLabel(inProgress)}</p>
-      <p class="current-location__detail">${escapeHtml(
-        `${inProgress.building} ${inProgress.floor} · ${inProgress.roomLabel}`,
-      )}</p>
-      <p class="current-location__detail">${escapeHtml(formatUpdateTime(inProgress.updatedAt))}</p>
+      <p class="current-location__value">${inProgressList.length}개 학급 진행 중</p>
+      <div class="current-location__list">
+        ${inProgressList
+          .map(
+            (item) => `
+              <div class="current-location__item">
+                <p class="current-location__item-title">${escapeHtml(formatClassLabel(item))}</p>
+                <p class="current-location__detail">${escapeHtml(
+                  `${item.building} ${item.floor} · ${item.roomLabel}`,
+                )}</p>
+                <p class="current-location__detail">${escapeHtml(formatUpdateTime(item.updatedAt))}</p>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
     `;
     return;
   }
@@ -718,8 +722,7 @@ function addSetupClass(building, floor) {
 function getVisibleClasses() {
   return sortClasses(viewState.server.classes).filter((item) => {
     const matchesGrade = viewState.filterGrade === "all" || String(item.grade) === viewState.filterGrade;
-    const matchesCompletion = !viewState.hideCompleted || item.status !== "complete";
-    return matchesGrade && matchesCompletion;
+    return matchesGrade;
   });
 }
 

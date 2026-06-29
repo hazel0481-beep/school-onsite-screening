@@ -64,14 +64,6 @@ const server = http.createServer(async (request, response) => {
         return sendJson(response, 404, { message: "Class not found." });
       }
 
-      if (nextStatus === "in_progress") {
-        state.classes = state.classes.map((item) =>
-          item.status === "in_progress" && item.id !== targetId
-            ? { ...item, status: "pending" }
-            : item,
-        );
-      }
-
       const updatedAt = new Date().toISOString();
       state.classes = state.classes.map((item) =>
         item.id === targetId
