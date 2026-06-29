@@ -1,4 +1,4 @@
-const BUILDING_ORDER = ["본관", "신관", "별관"];
+const BUILDING_ORDER = ["본관", "별관", "신관"];
 const STATUS_LABELS = {
   pending: "검진 전",
   in_progress: "검진 중",
@@ -799,45 +799,54 @@ function sortClasses(classes) {
 }
 
 function createSampleClasses() {
-  const sample = [];
-  const floorTemplate = [
-    { grade: 1, building: "본관", floor: "1층" },
-    { grade: 2, building: "본관", floor: "2층" },
-    { grade: 3, building: "신관", floor: "1층" },
-    { grade: 4, building: "신관", floor: "2층" },
-    { grade: 5, building: "별관", floor: "1층" },
-    { grade: 6, building: "별관", floor: "2층" },
-  ];
-
-  floorTemplate.forEach((entry) => {
-    for (let classNo = 1; classNo <= 4; classNo += 1) {
-      sample.push({
-        id: createClientId(),
-        grade: entry.grade,
-        classNo,
-        building: entry.building,
-        floor: entry.floor,
-        roomLabel: `${entry.grade}-${classNo} 교실`,
-      });
-    }
-  });
-
-  return sample;
+  return [
+    { grade: 1, classNo: 2, building: "본관", floor: "1층" },
+    { grade: 1, classNo: 1, building: "본관", floor: "1층" },
+    { grade: 1, classNo: 3, building: "본관", floor: "2층" },
+    { grade: 1, classNo: 4, building: "본관", floor: "2층" },
+    { grade: 5, classNo: 1, building: "본관", floor: "2층" },
+    { grade: 5, classNo: 2, building: "본관", floor: "2층" },
+    { grade: 5, classNo: 3, building: "본관", floor: "2층" },
+    { grade: 5, classNo: 4, building: "본관", floor: "2층" },
+    { grade: 4, classNo: 1, building: "본관", floor: "3층" },
+    { grade: 4, classNo: 2, building: "본관", floor: "3층" },
+    { grade: 4, classNo: 3, building: "본관", floor: "3층" },
+    { grade: 4, classNo: 4, building: "본관", floor: "3층" },
+    { grade: 4, classNo: 5, building: "본관", floor: "3층" },
+    { grade: 5, classNo: 5, building: "본관", floor: "3층" },
+    { grade: 2, classNo: 4, building: "별관", floor: "2층" },
+    { grade: 2, classNo: 3, building: "별관", floor: "2층" },
+    { grade: 2, classNo: 2, building: "별관", floor: "2층" },
+    { grade: 2, classNo: 1, building: "별관", floor: "2층" },
+    { grade: 3, classNo: 4, building: "별관", floor: "3층" },
+    { grade: 3, classNo: 1, building: "별관", floor: "4층" },
+    { grade: 3, classNo: 2, building: "별관", floor: "4층" },
+    { grade: 3, classNo: 3, building: "별관", floor: "4층" },
+    { grade: 6, classNo: 1, building: "신관", floor: "3층" },
+    { grade: 6, classNo: 2, building: "신관", floor: "3층" },
+    { grade: 6, classNo: 3, building: "신관", floor: "4층" },
+    { grade: 6, classNo: 4, building: "신관", floor: "4층" },
+    { grade: 6, classNo: 5, building: "신관", floor: "4층" },
+  ].map((entry) => ({
+    id: createClientId(),
+    ...entry,
+    roomLabel: `${entry.grade}-${entry.classNo} 교실`,
+  }));
 }
 
 function createSampleFloorsByBuilding() {
   return {
-    본관: ["1층", "2층"],
-    신관: ["1층", "2층"],
-    별관: ["1층", "2층"],
+    본관: ["1층", "2층", "3층"],
+    별관: ["2층", "3층", "4층"],
+    신관: ["3층", "4층"],
   };
 }
 
 function createEmptyFloorsByBuilding() {
   return {
     본관: [],
-    신관: [],
     별관: [],
+    신관: [],
   };
 }
 
