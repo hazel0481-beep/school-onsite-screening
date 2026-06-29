@@ -4,7 +4,10 @@ const path = require("path");
 
 const PORT = Number(process.env.PORT || 3100);
 const HOST = "0.0.0.0";
-const DATA_PATH = path.join(__dirname, "data", "state.json");
+const DEFAULT_DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = path.resolve(process.env.DATA_DIR || DEFAULT_DATA_DIR);
+const DATA_PATH = path.join(DATA_DIR, "state.json");
+const SEED_DATA_PATH = path.join(DEFAULT_DATA_DIR, "state.json");
 const BUILDING_ORDER = ["본관", "신관", "별관"];
 const STATUS_VALUES = new Set(["pending", "in_progress", "complete"]);
 const STATIC_FILES = {
@@ -122,18 +125,34 @@ const server = http.createServer(async (request, response) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`Oral exam board running at http://localhost:${PORT}`);
+  console.log(`Using state file: ${DATA_PATH}`);
 });
 
 function loadOrCreateState() {
+  const existingState = readStateFile(DATA_PATH);
+  if (existingState) {
+    return existingState;
+  }
+
+  const seededState =
+    path.resolve(DATA_PATH) !== path.resolve(SEED_DATA_PATH) ? readStateFile(SEED_DATA_PATH) : null;
+  const initialState = seededState || createDefaultState();
+  writeStateFile(DATA_PATH, initialState);
+  return initialState;
+}
+
+function readStateFile(filePath) {
   try {
-    const raw = fs.readFileSync(DATA_PATH, "utf8");
+    const raw = fs.readFileSync(filePath, "utf8");
     return normalizeState(JSON.parse(raw));
   } catch (error) {
-    const initialState = createDefaultState();
-    fs.mkdirSync(path.dirname(DATA_PATH), { recursive: true });
-    fs.writeFileSync(DATA_PATH, JSON.stringify(initialState, null, 2));
-    return initialState;
+    return null;
   }
+}
+
+function writeStateFile(filePath, nextState) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(nextState, null, 2));
 }
 
 function createDefaultState() {
@@ -290,7 +309,7 @@ function compareFloorLabels(left, right) {
 }
 
 function persistState() {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(state, null, 2));
+  writeStateFile(DATA_PATH, state);
 }
 
 function broadcastState() {
