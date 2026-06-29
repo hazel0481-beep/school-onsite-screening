@@ -6,11 +6,9 @@ const PORT = Number(process.env.PORT || 3100);
 const HOST = "0.0.0.0";
 const DEFAULT_DATA_DIR = path.join(__dirname, "data");
 const CLOUD_RUN_DATA_DIR = "/tmp/oral-exam-board-data";
-const DATA_DIR = path.resolve(
-  process.env.DATA_DIR || (process.env.K_SERVICE ? CLOUD_RUN_DATA_DIR : DEFAULT_DATA_DIR),
-);
-const DATA_PATH = path.join(DATA_DIR, "state.json");
 const SEED_DATA_PATH = path.join(DEFAULT_DATA_DIR, "state.json");
+const DATA_DIR = resolveDataDir();
+const DATA_PATH = path.join(DATA_DIR, "state.json");
 const BUILDING_ORDER = ["본관", "별관", "신관"];
 const STATUS_VALUES = new Set(["pending", "in_progress", "complete"]);
 const STATIC_FILES = {
@@ -134,6 +132,30 @@ function loadOrCreateState() {
   const initialState = seededState || createDefaultState();
   writeStateFile(DATA_PATH, initialState);
   return initialState;
+}
+
+function resolveDataDir() {
+  if (process.env.DATA_DIR) {
+    return path.resolve(process.env.DATA_DIR);
+  }
+
+  if (canWriteToDirectory(DEFAULT_DATA_DIR)) {
+    return DEFAULT_DATA_DIR;
+  }
+
+  return CLOUD_RUN_DATA_DIR;
+}
+
+function canWriteToDirectory(dirPath) {
+  try {
+    fs.mkdirSync(dirPath, { recursive: true });
+    const probePath = path.join(dirPath, `.write-test-${process.pid}`);
+    fs.writeFileSync(probePath, "ok");
+    fs.unlinkSync(probePath);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function readStateFile(filePath) {
