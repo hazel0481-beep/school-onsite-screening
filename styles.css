@@ -384,7 +384,7 @@ h1 {
 
 .building-board {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 12px;
   align-items: start;
@@ -392,10 +392,6 @@ h1 {
 
 .building-tower {
   min-width: 0;
-}
-
-.building-tower[data-building="본관"] {
-  grid-column: 1 / -1;
 }
 
 .building-tower__roof {
@@ -477,7 +473,7 @@ h1 {
 
 .tower-floor__windows {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -487,9 +483,9 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1 / 0.78;
+  aspect-ratio: 1 / 0.92;
   width: 100%;
-  min-height: 58px;
+  min-height: 54px;
   padding: 8px;
   border: 1px solid rgba(20, 32, 48, 0.12);
   border-radius: 14px;
@@ -553,7 +549,7 @@ h1 {
 }
 
 .window-unit__label {
-  font-size: 0.98rem;
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -834,7 +830,7 @@ h1 {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .topbar-inner,
   .toolbar,
   .section-heading {
