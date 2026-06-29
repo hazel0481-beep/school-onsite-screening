@@ -1,0 +1,408 @@
+{
+  "meta": {
+    "schoolName": "학교 건강검진일",
+    "boardTitle": "학생 구강검진 현황판",
+    "eventDate": "2026-06-29"
+  },
+  "floorsByBuilding": {
+    "본관": [
+      "1층",
+      "2층",
+      "3층"
+    ],
+    "신관": [
+      "1층",
+      "2층"
+    ],
+    "별관": [
+      "1층",
+      "2층"
+    ]
+  },
+  "classes": [
+    {
+      "id": "client-37cafwl5",
+      "grade": 1,
+      "classNo": 1,
+      "building": "본관",
+      "floor": "1층",
+      "roomLabel": "1-1 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-hg5lr62w",
+      "grade": 1,
+      "classNo": 2,
+      "building": "본관",
+      "floor": "1층",
+      "roomLabel": "1-2 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-h6rdn5sn",
+      "grade": 1,
+      "classNo": 3,
+      "building": "본관",
+      "floor": "1층",
+      "roomLabel": "1-3 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-futkw2zn",
+      "grade": 1,
+      "classNo": 4,
+      "building": "본관",
+      "floor": "1층",
+      "roomLabel": "1-4 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-xgr5cor7",
+      "grade": 1,
+      "classNo": 5,
+      "building": "본관",
+      "floor": "3층",
+      "roomLabel": "1-5 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-amcmr2o9",
+      "grade": 1,
+      "classNo": 6,
+      "building": "본관",
+      "floor": "3층",
+      "roomLabel": "1-6 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-cf6fnttv",
+      "grade": 1,
+      "classNo": 7,
+      "building": "본관",
+      "floor": "3층",
+      "roomLabel": "1-7 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-woxmmwx2",
+      "grade": 1,
+      "classNo": 8,
+      "building": "본관",
+      "floor": "3층",
+      "roomLabel": "1-8 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-00wk252k",
+      "grade": 1,
+      "classNo": 9,
+      "building": "본관",
+      "floor": "3층",
+      "roomLabel": "1-9 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-mqm1tm45",
+      "grade": 2,
+      "classNo": 1,
+      "building": "본관",
+      "floor": "2층",
+      "roomLabel": "2-1 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-3oibulkk",
+      "grade": 2,
+      "classNo": 2,
+      "building": "본관",
+      "floor": "2층",
+      "roomLabel": "2-2 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-9ctigzmn",
+      "grade": 2,
+      "classNo": 3,
+      "building": "본관",
+      "floor": "2층",
+      "roomLabel": "2-3 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-qhv89e2p",
+      "grade": 2,
+      "classNo": 4,
+      "building": "본관",
+      "floor": "2층",
+      "roomLabel": "2-4 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-tw5e5uvw",
+      "grade": 3,
+      "classNo": 1,
+      "building": "신관",
+      "floor": "1층",
+      "roomLabel": "3-1 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-46z9p5j3",
+      "grade": 3,
+      "classNo": 2,
+      "building": "신관",
+      "floor": "1층",
+      "roomLabel": "3-2 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-nhsce2mr",
+      "grade": 3,
+      "classNo": 3,
+      "building": "신관",
+      "floor": "1층",
+      "roomLabel": "3-3 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-metpdnqp",
+      "grade": 3,
+      "classNo": 4,
+      "building": "신관",
+      "floor": "1층",
+      "roomLabel": "3-4 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-xceshbxw",
+      "grade": 4,
+      "classNo": 1,
+      "building": "신관",
+      "floor": "2층",
+      "roomLabel": "4-1 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-0xn5mufn",
+      "grade": 4,
+      "classNo": 2,
+      "building": "신관",
+      "floor": "2층",
+      "roomLabel": "4-2 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-aa79o6pd",
+      "grade": 4,
+      "classNo": 3,
+      "building": "신관",
+      "floor": "2층",
+      "roomLabel": "4-3 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-1dhowc5r",
+      "grade": 4,
+      "classNo": 4,
+      "building": "신관",
+      "floor": "2층",
+      "roomLabel": "4-4 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-f2urxljq",
+      "grade": 5,
+      "classNo": 1,
+      "building": "별관",
+      "floor": "1층",
+      "roomLabel": "5-1 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-acojjgpx",
+      "grade": 5,
+      "classNo": 2,
+      "building": "별관",
+      "floor": "1층",
+      "roomLabel": "5-2 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-fnhe69k3",
+      "grade": 5,
+      "classNo": 3,
+      "building": "별관",
+      "floor": "1층",
+      "roomLabel": "5-3 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-k19ddnrc",
+      "grade": 5,
+      "classNo": 4,
+      "building": "별관",
+      "floor": "1층",
+      "roomLabel": "5-4 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-in1b6204",
+      "grade": 6,
+      "classNo": 1,
+      "building": "별관",
+      "floor": "2층",
+      "roomLabel": "6-1 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-n07t2in0",
+      "grade": 6,
+      "classNo": 2,
+      "building": "별관",
+      "floor": "2층",
+      "roomLabel": "6-2 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-gbgiq5ha",
+      "grade": 6,
+      "classNo": 3,
+      "building": "별관",
+      "floor": "2층",
+      "roomLabel": "6-3 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    },
+    {
+      "id": "client-otfidm8f",
+      "grade": 6,
+      "classNo": 4,
+      "building": "별관",
+      "floor": "2층",
+      "roomLabel": "6-4 교실",
+      "status": "pending",
+      "updatedAt": "",
+      "updatedBy": ""
+    }
+  ],
+  "history": [
+    {
+      "classId": "class-e2j4nb4y3",
+      "label": "6학년 2반",
+      "status": "pending",
+      "updatedAt": "2026-06-29T02:17:23.132Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-e2j4nb4y3",
+      "label": "6학년 2반",
+      "status": "complete",
+      "updatedAt": "2026-06-29T02:17:18.298Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-e2j4nb4y3",
+      "label": "6학년 2반",
+      "status": "in_progress",
+      "updatedAt": "2026-06-29T02:17:17.832Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-al0qkhdrn",
+      "label": "4학년 2반",
+      "status": "pending",
+      "updatedAt": "2026-06-29T02:16:13.800Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-al0qkhdrn",
+      "label": "4학년 2반",
+      "status": "complete",
+      "updatedAt": "2026-06-29T02:16:13.482Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-al0qkhdrn",
+      "label": "4학년 2반",
+      "status": "in_progress",
+      "updatedAt": "2026-06-29T02:16:13.133Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-03vq2xywg",
+      "label": "2학년 1반",
+      "status": "pending",
+      "updatedAt": "2026-06-29T02:14:46.983Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-03vq2xywg",
+      "label": "2학년 1반",
+      "status": "complete",
+      "updatedAt": "2026-06-29T02:14:46.199Z",
+      "updatedBy": "이름 미입력"
+    },
+    {
+      "classId": "class-03vq2xywg",
+      "label": "2학년 1반",
+      "status": "in_progress",
+      "updatedAt": "2026-06-29T02:14:45.665Z",
+      "updatedBy": "이름 미입력"
+    }
+  ]
+}
