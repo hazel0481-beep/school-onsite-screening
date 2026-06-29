@@ -6,6 +6,7 @@ const PORT = Number(process.env.PORT || 3100);
 const HOST = "0.0.0.0";
 const DEFAULT_DATA_DIR = path.join(__dirname, "data");
 const CLOUD_RUN_DATA_DIR = "/tmp/oral-exam-board-data";
+const DEFAULT_EVENT_DATE = "2026-07-02";
 const SEED_DATA_PATH = path.join(DEFAULT_DATA_DIR, "state.json");
 const DATA_DIR = resolveDataDir();
 const DATA_PATH = path.join(DATA_DIR, "state.json");
@@ -178,7 +179,7 @@ function createDefaultState() {
     meta: {
       schoolName: "학교 건강검진일",
       boardTitle: "학생 구강검진 현황판",
-      eventDate: formatDateString(new Date()),
+      eventDate: DEFAULT_EVENT_DATE,
     },
     floorsByBuilding: createSampleFloorsByBuilding(),
     classes,
@@ -247,7 +248,7 @@ function normalizeMeta(input) {
   return {
     schoolName: sanitizeString(input && input.schoolName, 40) || "학교 건강검진일",
     boardTitle: sanitizeString(input && input.boardTitle, 60) || "학생 구강검진 현황판",
-    eventDate: sanitizeDate(input && input.eventDate) || formatDateString(new Date()),
+    eventDate: sanitizeDate(input && input.eventDate) || DEFAULT_EVENT_DATE,
   };
 }
 

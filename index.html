@@ -13,7 +13,7 @@
         <div>
           <p class="eyebrow" id="schoolName">학교 건강검진일</p>
           <h1 id="boardTitle">학생 구강검진 현황판</h1>
-          <p class="subtitle">학급 담임이 완료 여부를 실시간으로 표시하는 하루용 현황판</p>
+          <p class="subtitle">담임교사가 완료 여부를 실시간으로 표시가능한 현황판</p>
         </div>
 
         <div class="topbar-tools">
@@ -52,22 +52,6 @@
           <p class="metric-value" id="pendingCountValue">0</p>
           <p class="metric-note" id="pendingCountNote">아직 미완료</p>
         </article>
-      </section>
-
-      <section class="toolbar">
-        <div class="filter-group" id="gradeFilters">
-          <button class="filter-button" type="button" data-grade-filter="all" data-active="true">전체</button>
-          <button class="filter-button" type="button" data-grade-filter="1">1학년</button>
-          <button class="filter-button" type="button" data-grade-filter="2">2학년</button>
-          <button class="filter-button" type="button" data-grade-filter="3">3학년</button>
-          <button class="filter-button" type="button" data-grade-filter="4">4학년</button>
-          <button class="filter-button" type="button" data-grade-filter="5">5학년</button>
-          <button class="filter-button" type="button" data-grade-filter="6">6학년</button>
-        </div>
-
-        <div class="toolbar-actions">
-          <button class="primary-button" id="setupToggleButton" type="button">학급 설정</button>
-        </div>
       </section>
 
       <section class="content-layout">
@@ -163,6 +147,12 @@
         </div>
 
         <div id="layoutEditor" class="layout-editor"></div>
+      </section>
+
+      <section class="admin-tools" aria-label="관리자 도구">
+        <div class="toolbar-actions admin-tools__actions">
+          <button class="secondary-button" id="setupToggleButton" type="button">학급 설정</button>
+        </div>
       </section>
     </main>
   </body>

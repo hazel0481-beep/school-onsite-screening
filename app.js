@@ -12,7 +12,6 @@ const STATUS_SHORT_LABELS = {
 
 const viewState = {
   server: null,
-  filterGrade: "all",
   connectionState: "connecting",
   pollTimerId: null,
   setupOpen: false,
@@ -34,7 +33,6 @@ const elements = {
   inProgressCountNote: document.querySelector("#inProgressCountNote"),
   pendingCountValue: document.querySelector("#pendingCountValue"),
   pendingCountNote: document.querySelector("#pendingCountNote"),
-  gradeFilters: document.querySelector("#gradeFilters"),
   setupToggleButton: document.querySelector("#setupToggleButton"),
   closeSetupButton: document.querySelector("#closeSetupButton"),
   progressFill: document.querySelector("#progressFill"),
@@ -72,16 +70,6 @@ function bindEvents() {
       boardTitle: viewState.server.meta.boardTitle,
       eventDate: event.target.value,
     });
-  });
-
-  elements.gradeFilters.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-grade-filter]");
-    if (!button) {
-      return;
-    }
-
-    viewState.filterGrade = button.getAttribute("data-grade-filter") || "all";
-    render();
   });
 
   elements.setupToggleButton.addEventListener("click", () => {
@@ -290,7 +278,6 @@ function render() {
 
   renderHeader();
   renderMetrics();
-  renderFilters();
   renderBoard();
   renderCurrentLocation();
   renderBuildingProgress();
@@ -324,14 +311,8 @@ function renderMetrics() {
   elements.progressCopy.textContent = `${completeCount} / ${classes.length} 학급 완료`;
 }
 
-function renderFilters() {
-  Array.from(elements.gradeFilters.querySelectorAll("[data-grade-filter]")).forEach((button) => {
-    button.setAttribute("data-active", String(button.getAttribute("data-grade-filter") === viewState.filterGrade));
-  });
-}
-
 function renderBoard() {
-  const visibleClasses = getVisibleClasses();
+  const visibleClasses = sortClasses(viewState.server.classes);
   const groupedBuildings = BUILDING_ORDER.map((building) => {
     const buildingClasses = visibleClasses.filter((item) => item.building === building);
     const floorLabels = getBuildingFloorLabels(viewState.server.floorsByBuilding, building, buildingClasses);
@@ -725,13 +706,6 @@ function addSetupClass(building, floor) {
     },
   ]);
   renderLayoutEditor();
-}
-
-function getVisibleClasses() {
-  return sortClasses(viewState.server.classes).filter((item) => {
-    const matchesGrade = viewState.filterGrade === "all" || String(item.grade) === viewState.filterGrade;
-    return matchesGrade;
-  });
 }
 
 function groupByFloor(classes, floorLabels = []) {

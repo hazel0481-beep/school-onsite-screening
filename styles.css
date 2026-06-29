@@ -207,6 +207,17 @@ h1 {
   padding: 6px 0 0;
 }
 
+.admin-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 6px;
+}
+
+.admin-tools__actions {
+  opacity: 0.72;
+}
+
 .filter-group {
   display: flex;
   flex-wrap: wrap;
