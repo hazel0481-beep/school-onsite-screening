@@ -5,7 +5,10 @@ const path = require("path");
 const PORT = Number(process.env.PORT || 3100);
 const HOST = "0.0.0.0";
 const DEFAULT_DATA_DIR = path.join(__dirname, "data");
-const DATA_DIR = path.resolve(process.env.DATA_DIR || DEFAULT_DATA_DIR);
+const CLOUD_RUN_DATA_DIR = "/tmp/oral-exam-board-data";
+const DATA_DIR = path.resolve(
+  process.env.DATA_DIR || (process.env.K_SERVICE ? CLOUD_RUN_DATA_DIR : DEFAULT_DATA_DIR),
+);
 const DATA_PATH = path.join(DATA_DIR, "state.json");
 const SEED_DATA_PATH = path.join(DEFAULT_DATA_DIR, "state.json");
 const BUILDING_ORDER = ["본관", "별관", "신관"];

@@ -25,22 +25,41 @@
 - 서버는 시작할 때 상태 파일을 읽고, 변경될 때마다 같은 파일에 즉시 저장합니다.
 - `DATA_DIR` 환경변수가 있으면 그 폴더의 `state.json`을 사용합니다.
 
+## Cloud Run 배포
+
+이 앱은 `Google Cloud Run`에 바로 올릴 수 있습니다.
+
+다만 현재는 파일 기반 저장 방식이라서, Cloud Run에서는 상태가 **임시 저장**됩니다.
+
+- 앱이 재시작되거나 새 버전으로 다시 배포되면 상태가 초기화될 수 있습니다.
+- 여러 인스턴스로 늘어나면 상태가 서로 어긋날 수 있습니다.
+
+그래서 이 앱은 Cloud Run에 올릴 때 아래 전제로 쓰는 것이 좋습니다.
+
+- 행사 당일용 임시 현황판으로 사용
+- `max instances = 1`
+- 행사 직전 배치 확인 후 배포
+- 행사 중에는 재배포하지 않기
+
+서버는 Cloud Run 환경에서 자동으로 `/tmp/oral-exam-board-data/state.json`에 상태를 저장합니다.
+
+### 배포 순서
+
+1. Google Cloud에서 프로젝트를 선택합니다.
+2. Cloud Run API가 꺼져 있으면 켭니다.
+3. Cloud Shell 또는 로컬 터미널에서 이 저장소 폴더로 이동합니다.
+4. 아래 명령으로 배포합니다.
+
+```bash
+gcloud run deploy school-onsite-screening \
+  --source . \
+  --region asia-northeast3 \
+  --allow-unauthenticated \
+  --max-instances 1
+```
+
+배포가 끝나면 공개 URL이 발급되고, 그 주소로 아무 PC나 휴대폰에서 접속할 수 있습니다.
+
 ## Render 배포
 
-이 앱은 상태를 파일에 저장하므로, 배포할 때도 **지속 디스크가 있는 단일 서버**로 올리는 것이 안전합니다.
-
-이 저장소에는 Render용 설정 파일 [render.yaml](render.yaml)이 포함되어 있습니다.
-
-배포 흐름:
-
-1. 이 프로젝트를 GitHub 저장소로 올립니다.
-2. Render에서 `Blueprint` 또는 `New Web Service`로 저장소를 연결합니다.
-3. `render.yaml`을 그대로 사용해 배포합니다.
-4. 첫 배포 시 현재 [data/state.json](data/state.json)의 학교명/배치가 시드 데이터로 복사됩니다.
-5. 이후에는 Render 디스크의 `/var/data/state.json`에만 상태가 저장됩니다.
-
-운영 메모:
-
-- 인스턴스는 1대로 유지하는 것이 좋습니다.
-- 파일 기반 저장이라 여러 인스턴스로 늘리면 상태가 어긋날 수 있습니다.
-- 행사 전날 배치 설정을 끝낸 뒤 한 번 배포하고, 행사 당일에는 배포를 다시 하지 않는 편이 안전합니다.
+Render로도 배포할 수 있게 [render.yaml](render.yaml)을 같이 넣어두었습니다.
