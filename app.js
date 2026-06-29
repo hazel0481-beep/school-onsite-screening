@@ -1,4 +1,3 @@
-const USER_NAME_KEY = "oral-exam-board-user-name";
 const BUILDING_ORDER = ["본관", "신관", "별관"];
 const STATUS_LABELS = {
   pending: "검진 전",
@@ -16,7 +15,6 @@ const viewState = {
   filterGrade: "all",
   hideCompleted: false,
   connectionState: "connecting",
-  userName: localStorage.getItem(USER_NAME_KEY) || "",
   setupOpen: false,
   setupRows: [],
   setupFloorsByBuilding: createEmptyFloorsByBuilding(),
@@ -28,7 +26,6 @@ const elements = {
   boardTitle: document.querySelector("#boardTitle"),
   liveStatus: document.querySelector("#liveStatus"),
   eventDateInput: document.querySelector("#eventDateInput"),
-  userNameInput: document.querySelector("#userNameInput"),
   totalClassesValue: document.querySelector("#totalClassesValue"),
   totalClassesNote: document.querySelector("#totalClassesNote"),
   completeCountValue: document.querySelector("#completeCountValue"),
@@ -61,17 +58,11 @@ initialize();
 
 async function initialize() {
   bindEvents();
-  elements.userNameInput.value = viewState.userName;
   await loadState();
   connectLiveUpdates();
 }
 
 function bindEvents() {
-  elements.userNameInput.addEventListener("input", (event) => {
-    viewState.userName = event.target.value.trim();
-    localStorage.setItem(USER_NAME_KEY, viewState.userName);
-  });
-
   elements.eventDateInput.addEventListener("change", async (event) => {
     if (!viewState.server) {
       return;
@@ -113,7 +104,7 @@ function bindEvents() {
       await postJson("/api/class-status", {
         classId: classWindow.getAttribute("data-class-id"),
         status: getNextStatus(classWindow.getAttribute("data-current-status")),
-        updatedBy: viewState.userName || "이름 미입력",
+        updatedBy: "담임",
       });
       return;
     }
@@ -126,7 +117,7 @@ function bindEvents() {
     await postJson("/api/class-status", {
       classId: button.getAttribute("data-class-id"),
       status: button.getAttribute("data-status-value"),
-      updatedBy: viewState.userName || "이름 미입력",
+      updatedBy: "담임",
     });
   });
 
@@ -398,9 +389,7 @@ function renderTowerFloor(floor) {
 
 function renderWindowUnit(classItem) {
   const locationText = `${classItem.building} ${classItem.floor} · ${classItem.roomLabel}`;
-  const metaText = classItem.updatedAt
-    ? `${formatTime(classItem.updatedAt)} · ${classItem.updatedBy || "이름 미입력"}`
-    : "아직 표시 없음";
+  const metaText = classItem.updatedAt ? `${formatTime(classItem.updatedAt)} 업데이트` : "아직 표시 없음";
   const buttonTitle = `${formatClassLabel(classItem)} · ${locationText} · ${STATUS_LABELS[classItem.status]} · ${metaText}`;
 
   return `
@@ -447,7 +436,7 @@ function renderCurrentLocation() {
       <p class="current-location__detail">${escapeHtml(
         `${inProgress.building} ${inProgress.floor} · ${inProgress.roomLabel}`,
       )}</p>
-      <p class="current-location__detail">${escapeHtml(formatUpdatedBy(inProgress.updatedBy, inProgress.updatedAt))}</p>
+      <p class="current-location__detail">${escapeHtml(formatUpdateTime(inProgress.updatedAt))}</p>
     `;
     return;
   }
@@ -457,7 +446,7 @@ function renderCurrentLocation() {
       <p class="current-location__label">마지막 업데이트</p>
       <p class="current-location__value">${escapeHtml(latest.label)}</p>
       <p class="current-location__detail">${escapeHtml(STATUS_LABELS[latest.status])}</p>
-      <p class="current-location__detail">${escapeHtml(formatUpdatedBy(latest.updatedBy, latest.updatedAt))}</p>
+      <p class="current-location__detail">${escapeHtml(formatUpdateTime(latest.updatedAt))}</p>
     `;
     return;
   }
@@ -499,7 +488,7 @@ function renderRecentUpdates() {
         <div class="recent-update-item">
           <div>
             <p>${escapeHtml(item.label)}</p>
-            <p class="recent-update-item__meta">${escapeHtml(formatUpdatedBy(item.updatedBy, item.updatedAt))}</p>
+            <p class="recent-update-item__meta">${escapeHtml(formatUpdateTime(item.updatedAt))}</p>
           </div>
           <span class="recent-update-item__status" data-status="${item.status}">${STATUS_LABELS[item.status]}</span>
         </div>
@@ -958,10 +947,9 @@ function formatCompactRoomLabel(roomLabel) {
   return label.length > 8 ? `${label.slice(0, 7)}…` : label;
 }
 
-function formatUpdatedBy(updatedBy, updatedAt) {
-  const name = updatedBy || "이름 미입력";
+function formatUpdateTime(updatedAt) {
   const time = updatedAt ? formatTime(updatedAt) : "시간 없음";
-  return `${time} · ${name}`;
+  return `${time} 업데이트`;
 }
 
 function getNextStatus(status) {

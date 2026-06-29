@@ -54,7 +54,7 @@ const server = http.createServer(async (request, response) => {
       const payload = await readJsonBody(request);
       const nextStatus = sanitizeStatus(payload.status);
       const targetId = String(payload.classId || "");
-      const updatedBy = sanitizeString(payload.updatedBy, 30) || "이름 미입력";
+      const updatedBy = sanitizeString(payload.updatedBy, 30) || "담임";
       const target = state.classes.find((item) => item.id === targetId);
 
       if (!target) {
