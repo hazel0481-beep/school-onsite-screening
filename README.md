@@ -24,6 +24,8 @@
 - 기본 상태 파일: [data/state.json](data/state.json)
 - 서버는 시작할 때 상태 파일을 읽고, 변경될 때마다 같은 파일에 즉시 저장합니다.
 - `DATA_DIR` 환경변수가 있으면 그 폴더의 `state.json`을 사용합니다.
+- `SUPABASE_URL`과 `SUPABASE_SERVICE_ROLE_KEY`가 설정되면 Supabase를 우선 저장소로 사용합니다.
+- Supabase를 쓰려면 [supabase-schema.sql](supabase-schema.sql)의 테이블을 먼저 만들어야 합니다.
 
 ## Cloud Run 배포
 

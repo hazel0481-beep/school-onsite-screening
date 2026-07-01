@@ -28,38 +28,12 @@
     </header>
 
     <main class="page-shell page-content">
-      <section class="summary-band">
-        <article class="metric">
-          <p class="metric-label">전체 학급</p>
-          <p class="metric-value" id="totalClassesValue">0</p>
-          <p class="metric-note" id="totalClassesNote">설정된 학급 수</p>
-        </article>
-
-        <article class="metric">
-          <p class="metric-label">완료</p>
-          <p class="metric-value" id="completeCountValue">0</p>
-          <p class="metric-note" id="completeCountNote">0%</p>
-        </article>
-
-        <article class="metric">
-          <p class="metric-label">검진 중</p>
-          <p class="metric-value" id="inProgressCountValue">0</p>
-          <p class="metric-note" id="inProgressCountNote">현재 위치 표시</p>
-        </article>
-
-        <article class="metric">
-          <p class="metric-label">남은 학급</p>
-          <p class="metric-value" id="pendingCountValue">0</p>
-          <p class="metric-note" id="pendingCountNote">아직 미완료</p>
-        </article>
-      </section>
-
       <section class="content-layout">
         <section class="board-section">
           <div class="section-heading">
             <div>
               <p class="section-kicker">School Layout</p>
-              <h2>학교 배치 현황</h2>
+              <h2>검진 완료 상태</h2>
             </div>
             <p class="section-caption">각 반에서 상태를 눌러 바로 공유할 수 있어요.</p>
           </div>
@@ -111,6 +85,32 @@
             <div id="recentUpdatesList" class="recent-updates-list"></div>
           </section>
         </aside>
+      </section>
+
+      <section class="summary-band">
+        <article class="metric">
+          <p class="metric-label">전체 학급</p>
+          <p class="metric-value" id="totalClassesValue">0</p>
+          <p class="metric-note" id="totalClassesNote">설정된 학급 수</p>
+        </article>
+
+        <article class="metric">
+          <p class="metric-label">완료</p>
+          <p class="metric-value" id="completeCountValue">0</p>
+          <p class="metric-note" id="completeCountNote">0%</p>
+        </article>
+
+        <article class="metric">
+          <p class="metric-label">검진 중</p>
+          <p class="metric-value" id="inProgressCountValue">0</p>
+          <p class="metric-note" id="inProgressCountNote">현재 위치 표시</p>
+        </article>
+
+        <article class="metric">
+          <p class="metric-label">남은 학급</p>
+          <p class="metric-value" id="pendingCountValue">0</p>
+          <p class="metric-note" id="pendingCountNote">아직 미완료</p>
+        </article>
       </section>
 
       <section class="setup-section" id="setupSection" hidden>

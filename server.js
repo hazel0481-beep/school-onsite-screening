@@ -19,8 +19,13 @@ const STATIC_FILES = {
   "/app.js": "app.js",
 };
 const SSE_CLIENTS = new Set();
+const SUPABASE_URL = sanitizeSupabaseUrl(process.env.SUPABASE_URL);
+const SUPABASE_SERVICE_ROLE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+const SUPABASE_TABLE = sanitizeSupabaseIdentifier(process.env.SUPABASE_TABLE) || "oral_exam_board_state";
+const SUPABASE_ROW_ID = sanitizeString(process.env.SUPABASE_ROW_ID || "default", 80) || "default";
+const HAS_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 
-let state = loadOrCreateState();
+let state = null;
 
 const server = http.createServer(async (request, response) => {
   try {
@@ -41,7 +46,7 @@ const server = http.createServer(async (request, response) => {
         boardTitle: payload.boardTitle,
         eventDate: payload.eventDate,
       });
-      persistState();
+      await persistState();
       broadcastState();
       return sendJson(response, 200, state);
     }
@@ -50,7 +55,7 @@ const server = http.createServer(async (request, response) => {
       const payload = await readJsonBody(request);
       state.classes = normalizeClasses(payload.classes, state.classes);
       state.floorsByBuilding = normalizeFloorsByBuilding(payload.floorsByBuilding, state.classes);
-      persistState();
+      await persistState();
       broadcastState();
       return sendJson(response, 200, state);
     }
@@ -88,7 +93,7 @@ const server = http.createServer(async (request, response) => {
       });
       state.history = normalizeHistory(state.history);
 
-      persistState();
+      await persistState();
       broadcastState();
       return sendJson(response, 200, state);
     }
@@ -101,7 +106,7 @@ const server = http.createServer(async (request, response) => {
         updatedBy: "",
       }));
       state.history = [];
-      persistState();
+      await persistState();
       broadcastState();
       return sendJson(response, 200, state);
     }
@@ -117,14 +122,35 @@ const server = http.createServer(async (request, response) => {
   }
 });
 
-server.listen(PORT, HOST, () => {
-  console.log(`Oral exam board running at http://localhost:${PORT}`);
-  console.log(`Using state file: ${DATA_PATH}`);
+boot().catch((error) => {
+  console.error("Failed to boot oral exam board.", error);
+  process.exitCode = 1;
 });
 
-function loadOrCreateState() {
+async function boot() {
+  state = await loadOrCreateState();
+  server.listen(PORT, HOST, () => {
+    console.log(`Oral exam board running at http://localhost:${PORT}`);
+    console.log(`Using state file: ${DATA_PATH}`);
+    if (HAS_SUPABASE) {
+      console.log(`Using Supabase table: ${SUPABASE_TABLE}`);
+    }
+  });
+}
+
+async function loadOrCreateState() {
+  if (HAS_SUPABASE) {
+    const remoteState = await readSupabaseState();
+    if (remoteState) {
+      return remoteState;
+    }
+  }
+
   const existingState = readStateFile(DATA_PATH);
   if (existingState) {
+    if (HAS_SUPABASE) {
+      await writeSupabaseState(existingState);
+    }
     return existingState;
   }
 
@@ -132,6 +158,9 @@ function loadOrCreateState() {
     path.resolve(DATA_PATH) !== path.resolve(SEED_DATA_PATH) ? readStateFile(SEED_DATA_PATH) : null;
   const initialState = seededState || createDefaultState();
   writeStateFile(DATA_PATH, initialState);
+  if (HAS_SUPABASE) {
+    await writeSupabaseState(initialState);
+  }
   return initialState;
 }
 
@@ -335,8 +364,77 @@ function compareFloorLabels(left, right) {
   return String(left).localeCompare(String(right), "ko");
 }
 
-function persistState() {
+async function persistState() {
+  if (HAS_SUPABASE) {
+    await writeSupabaseState(state);
+    return;
+  }
+
   writeStateFile(DATA_PATH, state);
+}
+
+async function readSupabaseState() {
+  const url = new URL(`/rest/v1/${SUPABASE_TABLE}`, SUPABASE_URL);
+  url.searchParams.set("id", `eq.${SUPABASE_ROW_ID}`);
+  url.searchParams.set("select", "state");
+  url.searchParams.set("limit", "1");
+
+  const response = await fetch(url, {
+    headers: buildSupabaseHeaders(),
+  });
+
+  if (!response.ok) {
+    const detail = await safeReadText(response);
+    throw new Error(`Supabase read failed: ${response.status} ${detail}`);
+  }
+
+  const rows = await response.json();
+  if (!Array.isArray(rows) || !rows[0] || !rows[0].state) {
+    return null;
+  }
+
+  return normalizeState(rows[0].state);
+}
+
+async function writeSupabaseState(nextState) {
+  const url = new URL(`/rest/v1/${SUPABASE_TABLE}`, SUPABASE_URL);
+  url.searchParams.set("on_conflict", "id");
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...buildSupabaseHeaders(),
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=representation",
+    },
+    body: JSON.stringify([
+      {
+        id: SUPABASE_ROW_ID,
+        state: nextState,
+        updated_at: new Date().toISOString(),
+      },
+    ]),
+  });
+
+  if (!response.ok) {
+    const detail = await safeReadText(response);
+    throw new Error(`Supabase write failed: ${response.status} ${detail}`);
+  }
+}
+
+function buildSupabaseHeaders() {
+  return {
+    apikey: SUPABASE_SERVICE_ROLE_KEY,
+    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+  };
+}
+
+async function safeReadText(response) {
+  try {
+    return (await response.text()).slice(0, 400);
+  } catch (error) {
+    return "";
+  }
 }
 
 function broadcastState() {
@@ -411,6 +509,25 @@ function sanitizeStatus(value) {
 
 function sanitizeString(value, maxLength) {
   return String(value || "").trim().slice(0, maxLength);
+}
+
+function sanitizeSupabaseUrl(value) {
+  const stringValue = String(value || "").trim();
+  if (!stringValue) {
+    return "";
+  }
+
+  try {
+    const url = new URL(stringValue);
+    return url.origin;
+  } catch (error) {
+    return "";
+  }
+}
+
+function sanitizeSupabaseIdentifier(value) {
+  const stringValue = String(value || "").trim();
+  return /^[a-zA-Z0-9_]+$/.test(stringValue) ? stringValue : "";
 }
 
 function sanitizeDate(value) {
